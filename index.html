@@ -8,54 +8,47 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-:root {
-  --gold:#FFD700; --diamond:#5DECF5; --emerald:#17DD62;
-  --red:#FF5555; --orange:#FFAA00; --purple:#CC88FF;
-  --bg:#0d0d0d; --panel:#1e1e1e; --panel2:#2a2a2a; --border:#3a3a3a;
-  --text:#F0F0F0; --dim:#888;
+:root{
+  --gold:#FFD700;--diamond:#5DECF5;--emerald:#17DD62;
+  --red:#FF5555;--orange:#FFAA00;--purple:#CC88FF;
+  --bg:#0d0d0d;--panel:#1e1e1e;--dim:#777;--text:#F0F0F0;
   --font:'Press Start 2P',monospace;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scrollbar-color:#444 #111;scrollbar-width:thin}
 body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:10px;min-height:100vh;overflow-x:hidden}
-
 body::before{content:'';position:fixed;inset:0;
   background:
-    repeating-linear-gradient(0deg,transparent,transparent 15px,rgba(255,255,255,.012) 15px,rgba(255,255,255,.012) 16px),
-    repeating-linear-gradient(90deg,transparent,transparent 15px,rgba(255,255,255,.012) 15px,rgba(255,255,255,.012) 16px),
-    radial-gradient(ellipse 60% 40% at 20% 30%,#1a2a0a22,transparent),
-    radial-gradient(ellipse 50% 60% at 80% 70%,#0a1a2a22,transparent);
+    repeating-linear-gradient(0deg,transparent,transparent 15px,rgba(255,255,255,.013) 15px,rgba(255,255,255,.013) 16px),
+    repeating-linear-gradient(90deg,transparent,transparent 15px,rgba(255,255,255,.013) 15px,rgba(255,255,255,.013) 16px),
+    radial-gradient(ellipse 60% 40% at 20% 30%,#1a2a0a18,transparent),
+    radial-gradient(ellipse 50% 60% at 80% 70%,#0a1a2a18,transparent);
   pointer-events:none;z-index:0}
-
 .app{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:16px}
 
-/* ── HEADER ── */
+/* HEADER */
 .hdr{text-align:center;padding:28px 0 20px}
-.hdr-icon{font-size:36px;display:block;margin-bottom:12px;filter:drop-shadow(0 0 12px #FFD70066);animation:bob 3s ease-in-out infinite}
+.hdr-icon{font-size:38px;display:block;margin-bottom:12px;filter:drop-shadow(0 0 14px #FFD70066);animation:bob 3s ease-in-out infinite}
 @keyframes bob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-8px) rotate(3deg)}}
 .hdr-title{font-size:clamp(12px,3.5vw,20px);color:var(--gold);text-shadow:3px 3px 0 #7a5500,6px 6px 0 #00000088;letter-spacing:2px;line-height:1.8;margin-bottom:6px}
 .hdr-sub{font-size:7px;color:var(--dim);text-shadow:1px 1px 0 #000}
 
-/* ── PANEL ── */
+/* PANEL */
 .panel{background:var(--panel);border:3px solid;border-color:#4a4a4a #1a1a1a #1a1a1a #4a4a4a;box-shadow:inset 1px 1px 0 #555,inset -1px -1px 0 #111,3px 3px 0 #000;padding:14px;margin-bottom:14px}
-.ptitle{font-size:8px;color:var(--gold);text-shadow:2px 2px 0 #7a5500;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #3a3a3a;display:flex;align-items:center;gap:8px}
-.ptitle-icon{font-size:14px}
+.ptitle{font-size:8px;color:var(--gold);text-shadow:2px 2px 0 #7a5500;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #333;display:flex;align-items:center;gap:8px}
 .step-num{background:#7a5500;color:var(--gold);padding:2px 6px;font-size:7px;border:2px solid var(--gold)}
 
-/* ── DROP ZONE ── */
+/* DROP ZONE */
 .dz{border:3px dashed #444;background:#080808;padding:24px 16px;text-align:center;cursor:pointer;transition:all .15s;min-height:110px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
 .dz:hover,.dz.over{border-color:var(--gold);background:#120f00;box-shadow:inset 0 0 30px #FFD70015}
 .dz-icon{font-size:26px;animation:bob 2.5s ease-in-out infinite}
 .dz p{color:var(--dim);font-size:7px;line-height:2.2}
 .dz em{color:var(--gold);font-style:normal}
-#fi{display:none}
 
-/* ── ADDON CARDS ── */
+/* ADDON CARDS */
 .addon-list{display:flex;flex-direction:column;gap:10px;margin-top:12px}
-
 .addon-card{background:#0c0c0c;border:2px solid #333;animation:slideIn .25s ease}
 @keyframes slideIn{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:translateX(0)}}
-
 .addon-card-header{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid #222;cursor:pointer;user-select:none}
 .addon-card-header:hover{background:#141414}
 .addon-icon{font-size:18px;flex-shrink:0}
@@ -66,36 +59,52 @@ body::before{content:'';position:fixed;inset:0;
 .badge{font-size:5px;padding:2px 6px;border:2px solid;font-family:var(--font);white-space:nowrap}
 .b-bp{color:var(--orange);border-color:var(--orange);background:#1a0a00}
 .b-rp{color:var(--diamond);border-color:var(--diamond);background:#001a1a}
-.b-scripts{color:var(--purple);border-color:var(--purple);background:#120a1a}
-.b-files{color:var(--emerald);border-color:var(--emerald);background:#001a0a}
-
+.b-scr{color:var(--purple);border-color:var(--purple);background:#120a1a}
+.b-f{color:var(--emerald);border-color:var(--emerald);background:#001a0a}
 .addon-packs{padding:0 12px 10px;display:none}
 .addon-packs.open{display:block}
 .pack-row{display:flex;align-items:center;gap:8px;padding:6px 8px;background:#111;border:1px solid #2a2a2a;margin-top:6px;font-size:6px}
-.pack-row-icon{font-size:12px}
-.pack-row-info{flex:1}
-.pack-row-name{color:var(--text);margin-bottom:3px}
+.pack-row-icon{font-size:12px;flex-shrink:0}
+.pack-row-info{flex:1;min-width:0}
+.pack-row-name{color:var(--text);margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pack-row-meta{color:var(--dim)}
-
 .addon-remove{background:#300;border:2px solid var(--red);color:var(--red);font-family:var(--font);font-size:7px;padding:5px 8px;cursor:pointer;flex-shrink:0}
 .addon-remove:hover{background:var(--red);color:#fff}
-.toggle-arrow{font-size:8px;color:var(--dim);transition:transform .2s;flex-shrink:0}
-.toggle-arrow.open{transform:rotate(90deg)}
+.tarr{font-size:8px;color:var(--dim);transition:transform .2s;flex-shrink:0}
+.tarr.open{transform:rotate(90deg)}
 
-/* ── SUMMARY BAR ── */
-.summary-bar{display:flex;gap:8px;flex-wrap:wrap;padding:10px;background:#080808;border:2px solid #2a2a2a;margin-top:10px}
-.sum-item{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;min-width:60px}
+/* SUMMARY BAR */
+.sum-bar{display:flex;gap:8px;flex-wrap:wrap;padding:10px;background:#080808;border:2px solid #2a2a2a;margin-top:10px}
+.sum-item{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;min-width:55px}
 .sum-num{font-size:14px;color:var(--gold)}
-.sum-label{font-size:5px;color:var(--dim);text-align:center}
+.sum-lbl{font-size:5px;color:var(--dim);text-align:center}
 
-/* ── OPTS ── */
+/* OPTS */
 .opts-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 @media(max-width:560px){.opts-grid{grid-template-columns:1fr}}
 .opt-group label{display:block;font-size:6px;color:var(--dim);margin-bottom:5px}
 .mc-input{width:100%;background:#080808;border:2px solid #3a3a3a;color:var(--text);font-family:var(--font);font-size:8px;padding:7px 10px;outline:none}
 .mc-input:focus{border-color:var(--gold)}
 
-/* ── BUTTONS ── */
+/* PACK ICON UPLOAD */
+.icon-section{margin-top:12px}
+.icon-sec-title{font-size:7px;color:var(--gold);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.icon-sec-title span{font-size:6px;color:var(--dim);font-family:var(--font)}
+.icon-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:480px){.icon-grid{grid-template-columns:1fr}}
+.icon-slot{background:#080808;border:2px solid #333;padding:12px;text-align:center;cursor:pointer;transition:all .15s;position:relative}
+.icon-slot:hover{border-color:var(--gold);background:#120f00}
+.icon-preview{width:72px;height:72px;margin:0 auto 8px;background:#111;border:2px solid #3a3a3a;display:flex;align-items:center;justify-content:center;font-size:28px;image-rendering:pixelated;overflow:hidden}
+.icon-preview img{width:100%;height:100%;object-fit:contain;image-rendering:pixelated}
+.icon-slot-label{font-size:6px;color:var(--dim);margin-bottom:4px}
+.icon-slot-hint{font-size:5px;color:#555}
+.icon-slot.has-icon .icon-slot-hint{color:var(--emerald)}
+.icon-slot.has-icon{border-color:#2a5a2a}
+.icon-clear-btn{position:absolute;top:6px;right:6px;background:#300;border:1px solid var(--red);color:var(--red);font-family:var(--font);font-size:6px;padding:2px 5px;cursor:pointer;display:none}
+.icon-slot.has-icon .icon-clear-btn{display:block}
+.icon-clear-btn:hover{background:var(--red);color:#fff}
+
+/* BUTTONS */
 .btn-row{display:flex;gap:8px;flex-wrap:wrap}
 .mc-btn{font-family:var(--font);font-size:8px;padding:11px 16px;cursor:pointer;border:none;position:relative;text-shadow:2px 2px 0 #000;flex:1;min-width:110px;white-space:nowrap}
 .mc-btn::before{content:'';position:absolute;inset:0;border:3px solid}
@@ -108,7 +117,7 @@ body::before{content:'';position:fixed;inset:0;
 .btn-r::before{border-color:#cc4a4a #380808 #380808 #cc4a4a}
 .btn-r:hover:not(:disabled){filter:brightness(1.2)}
 
-/* ── PROGRESS ── */
+/* PROGRESS */
 .prog-wrap{display:none;flex-direction:column;gap:6px;margin-top:12px}
 .prog-wrap.on{display:flex}
 .prog-outer{background:#080808;border:2px solid #3a3a3a;height:22px;position:relative;overflow:hidden}
@@ -116,7 +125,7 @@ body::before{content:'';position:fixed;inset:0;
 .prog-lbl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:7px;color:#fff;text-shadow:1px 1px 0 #000}
 .prog-txt{font-size:6px;color:var(--dim)}
 
-/* ── LOG ── */
+/* LOG */
 .log{background:#050505;border:2px solid #2a2a2a;padding:10px;max-height:200px;overflow-y:auto;display:none;font-size:6px;line-height:2.2}
 .log.on{display:block}
 .log::-webkit-scrollbar{width:5px}
@@ -131,27 +140,26 @@ body::before{content:'';position:fixed;inset:0;
 .lt{white-space:nowrap;font-size:5px;min-width:30px}
 .lm{color:var(--dim)}
 
-/* ── RESULTS ── */
+/* RESULTS */
 .res-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
 .res-card{background:#080808;border:2px solid #333;padding:14px;text-align:center}
 .res-icon{font-size:22px;margin-bottom:8px}
 .res-title{font-size:8px;margin-bottom:8px}
 .res-stats{font-size:6px;color:var(--dim);line-height:2.4;margin-bottom:8px}
 .res-stats strong{color:var(--emerald)}
-
-/* ── HR ── */
 hr{border:none;border-top:2px solid #2a2a2a;margin:12px 0}
 
-/* ── TOAST ── */
+/* TOAST */
 .toast{position:fixed;bottom:18px;right:18px;background:var(--panel);border:3px solid;padding:10px 14px;font-size:7px;max-width:260px;z-index:9999;box-shadow:3px 3px 0 #000;display:none;line-height:1.8}
 .toast.on{display:block;animation:tin .25s ease}
 @keyframes tin{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 .toast.ok{border-color:#2a7 #092 #092 #2a7;color:var(--emerald)}
 .toast.er{border-color:#a33 #411 #411 #a33;color:var(--red)}
 
-/* ── TIP ── */
-.tip{background:#080808;border:1px solid #2a2a2a;padding:8px 12px;font-size:6px;color:var(--dim);line-height:2.2}
+/* TIP */
+.tip{background:#080808;border:1px solid #2a2a2a;padding:8px 12px;font-size:6px;color:var(--dim);line-height:2.3}
 .tip b{color:var(--gold)}
+.tip .tip-item{display:flex;gap:6px;margin-bottom:2px}
 </style>
 </head>
 <body>
@@ -164,46 +172,68 @@ hr{border:none;border-top:2px solid #2a2a2a;margin:12px 0}
   <div class="hdr-sub">Combine multiple addons into one .mcaddon file</div>
 </div>
 
-<!-- STEP 1 -->
+<!-- STEP 1: LOAD -->
 <div class="panel">
-  <div class="ptitle"><span class="ptitle-icon">📦</span><span class="step-num">01</span> LOAD ADDONS</div>
+  <div class="ptitle"><span>📦</span><span class="step-num">01</span> LOAD ADDONS</div>
   <div class="dz" id="dz">
     <span class="dz-icon">📁</span>
     <p><em>CLICK or DRAG & DROP</em> your addon files here</p>
     <p>Supports: <em>.mcaddon · .zip (BP/RP)</em></p>
   </div>
-  <input type="file" id="fi" accept=".zip,.mcaddon,.mcpack" multiple>
-
+  <input type="file" id="fi" accept=".zip,.mcaddon,.mcpack" multiple style="display:none">
   <div class="addon-list" id="addonList"></div>
-  <div class="summary-bar" id="summaryBar" style="display:none">
-    <div class="sum-item"><div class="sum-num" id="sumAddons">0</div><div class="sum-label">ADDONS</div></div>
-    <div class="sum-item"><div class="sum-num" id="sumBP" style="color:var(--orange)">0</div><div class="sum-label">BEHAVIOR PACKS</div></div>
-    <div class="sum-item"><div class="sum-num" id="sumRP" style="color:var(--diamond)">0</div><div class="sum-label">RESOURCE PACKS</div></div>
-    <div class="sum-item"><div class="sum-num" id="sumFiles" style="color:var(--emerald)">0</div><div class="sum-label">TOTAL FILES</div></div>
+  <div class="sum-bar" id="sumBar" style="display:none">
+    <div class="sum-item"><div class="sum-num" id="sCnt">0</div><div class="sum-lbl">ADDONS</div></div>
+    <div class="sum-item"><div class="sum-num" id="sBP" style="color:var(--orange)">0</div><div class="sum-lbl">BEHAVIOR PACKS</div></div>
+    <div class="sum-item"><div class="sum-num" id="sRP" style="color:var(--diamond)">0</div><div class="sum-lbl">RESOURCE PACKS</div></div>
+    <div class="sum-item"><div class="sum-num" id="sF" style="color:var(--emerald)">0</div><div class="sum-lbl">TOTAL FILES</div></div>
   </div>
 </div>
 
-<!-- STEP 2 -->
+<!-- STEP 2: SETTINGS -->
 <div class="panel">
-  <div class="ptitle"><span class="ptitle-icon">⚙</span><span class="step-num">02</span> SETTINGS</div>
+  <div class="ptitle"><span>⚙</span><span class="step-num">02</span> SETTINGS</div>
   <div class="opts-grid">
-    <div class="opt-group"><label>OUTPUT ADDON NAME</label><input class="mc-input" id="outName" value="Merged_Addon" placeholder="Merged_Addon"></div>
-    <div class="opt-group"><label>MIN ENGINE VERSION</label><input class="mc-input" id="minEng" value="1.21.130" placeholder="1.21.130"></div>
-    <div class="opt-group"><label>BEHAVIOR PACK NAME</label><input class="mc-input" id="bpName" value="Unified_BP" placeholder="Unified_BP"></div>
-    <div class="opt-group"><label>RESOURCE PACK NAME</label><input class="mc-input" id="rpName" value="Unified_RP" placeholder="Unified_RP"></div>
+    <div class="opt-group"><label>OUTPUT ADDON NAME</label><input class="mc-input" id="outName" value="Merged_Addon"></div>
+    <div class="opt-group"><label>MIN ENGINE VERSION</label><input class="mc-input" id="minEng" value="1.21.130"></div>
+    <div class="opt-group"><label>BEHAVIOR PACK NAME</label><input class="mc-input" id="bpName" value="Unified_BP"></div>
+    <div class="opt-group"><label>RESOURCE PACK NAME</label><input class="mc-input" id="rpName" value="Unified_RP"></div>
   </div>
+
+  <!-- PACK ICONS -->
+  <div class="icon-section">
+    <hr>
+    <div class="icon-sec-title">🖼 PACK ICONS <span>(optional — leave blank to use original icons)</span></div>
+    <div class="icon-grid">
+      <div class="icon-slot" id="bpIconSlot" onclick="document.getElementById('bpIconFi').click()">
+        <button class="icon-clear-btn" onclick="event.stopPropagation();clearIcon('bp')">✕</button>
+        <div class="icon-preview" id="bpIconPreview"><span>⚙</span></div>
+        <div class="icon-slot-label">BEHAVIOR PACK ICON</div>
+        <div class="icon-slot-hint" id="bpIconHint">Click to upload PNG</div>
+      </div>
+      <div class="icon-slot" id="rpIconSlot" onclick="document.getElementById('rpIconFi').click()">
+        <button class="icon-clear-btn" onclick="event.stopPropagation();clearIcon('rp')">✕</button>
+        <div class="icon-preview" id="rpIconPreview"><span>🎨</span></div>
+        <div class="icon-slot-label">RESOURCE PACK ICON</div>
+        <div class="icon-slot-hint" id="rpIconHint">Click to upload PNG</div>
+      </div>
+    </div>
+    <input type="file" id="bpIconFi" accept="image/png,image/jpeg,image/gif" style="display:none" onchange="handleIconUpload('bp',this)">
+    <input type="file" id="rpIconFi" accept="image/png,image/jpeg,image/gif" style="display:none" onchange="handleIconUpload('rp',this)">
+  </div>
+
   <hr>
   <div class="tip">
-    <b>OUTPUT FORMAT:</b> Single <b>.mcaddon</b> file containing merged BP + RP<br>
-    <b>SCRIPTS:</b> Namespaced per pack → scripts/&lt;pack_id&gt;/ (no conflicts)<br>
-    <b>JSON MERGE:</b> blocks, sounds, textures, terrain, items, materials, geo models<br>
-    <b>CONFLICTS:</b> Renamed with pack prefix → e.g. <b>bop_door.geo.json</b>
+    <div class="tip-item"><b>OUTPUT:</b> Single .mcaddon (BP folder + RP folder inside)</div>
+    <div class="tip-item"><b>SCRIPTS:</b> All scripts namespaced → scripts/&lt;pack_id&gt;/ (zero conflicts)</div>
+    <div class="tip-item"><b>JSON MERGE:</b> blocks · sounds · textures · materials · anim_controllers · render_controllers</div>
+    <div class="tip-item"><b>EQUAL TREATMENT:</b> ALL conflicting files renamed with pack prefix — no content lost</div>
   </div>
 </div>
 
-<!-- STEP 3 -->
+<!-- STEP 3: MERGE -->
 <div class="panel">
-  <div class="ptitle"><span class="ptitle-icon">⚡</span><span class="step-num">03</span> MERGE & DOWNLOAD</div>
+  <div class="ptitle"><span>⚡</span><span class="step-num">03</span> MERGE & DOWNLOAD</div>
   <div class="btn-row">
     <button class="mc-btn btn-g" id="btnMerge" onclick="startMerge()" disabled>⚗ MERGE INTO .mcaddon</button>
     <button class="mc-btn btn-r" onclick="clearAll()">✕ CLEAR ALL</button>
@@ -218,7 +248,7 @@ hr{border:none;border-top:2px solid #2a2a2a;margin:12px 0}
 
 <!-- RESULTS -->
 <div class="panel" id="resPanel" style="display:none">
-  <div class="ptitle"><span class="ptitle-icon">🏆</span> MERGE COMPLETE!</div>
+  <div class="ptitle"><span>🏆</span> MERGE COMPLETE!</div>
   <div class="res-grid" id="resGrid"></div>
 </div>
 
@@ -226,15 +256,16 @@ hr{border:none;border-top:2px solid #2a2a2a;margin:12px 0}
 <div class="toast" id="toast"></div>
 
 <script>
-// ══════════════════════════════════════
+// ════════════════════════════════════════════════
 // STATE
-// ══════════════════════════════════════
-// loadedAddons: [{id, filename, packs:[{id,name,type,files,manifest,fileCount}]}]
-let loadedAddons = [];
+// ════════════════════════════════════════════════
+let loadedAddons = []; // [{id,filename,packs:[{id,name,type,files,manifest,fileCount}]}]
+let customBPIcon = null; // Uint8Array
+let customRPIcon = null; // Uint8Array
 
-// ══════════════════════════════════════
-// DRAG & DROP
-// ══════════════════════════════════════
+// ════════════════════════════════════════════════
+// DRAG & DROP / FILE INPUT
+// ════════════════════════════════════════════════
 const dz = document.getElementById('dz');
 const fi = document.getElementById('fi');
 dz.addEventListener('click', () => fi.click());
@@ -249,491 +280,518 @@ async function handleFiles(files) {
   document.getElementById('btnMerge').disabled = getAllPacks().length < 2;
 }
 
-// ══════════════════════════════════════
-// LOAD ADDON FILE
-// ══════════════════════════════════════
+// ════════════════════════════════════════════════
+// LOAD ADDON
+// ════════════════════════════════════════════════
 async function loadAddon(file) {
   try {
-    const buf = await file.arrayBuffer();
-    const zip = await JSZip.loadAsync(buf);
-    const addonId = sanitizeId(file.name);
-    if (loadedAddons.find(a => a.id === addonId)) { showToast(`Already loaded: ${file.name}`, 'er'); return; }
-
-    const packs = await extractPacksFromZip(zip);
-    if (!packs.length) { showToast(`No valid packs found in ${file.name}`, 'er'); return; }
-
-    loadedAddons.push({ id: addonId, filename: file.name, packs });
+    const buf  = await file.arrayBuffer();
+    const zip  = await JSZip.loadAsync(buf);
+    const aid  = sanitizeId(file.name);
+    if (loadedAddons.find(a => a.id === aid)) { showToast(`Already loaded: ${file.name}`, 'er'); return; }
+    const packs = await extractPacks(zip);
+    if (!packs.length) { showToast(`No valid BP/RP found in ${file.name}`, 'er'); return; }
+    loadedAddons.push({ id: aid, filename: file.name, packs });
     showToast(`Loaded: ${file.name} (${packs.length} pack${packs.length>1?'s':''})`, 'ok');
   } catch(e) {
-    showToast(`Error loading ${file.name}: ${e.message}`, 'er');
+    showToast(`Error: ${file.name} — ${e.message}`, 'er');
   }
 }
 
-async function extractPacksFromZip(zip) {
+async function extractPacks(zip) {
   const packs = [];
-  // Find all manifest.json files, sort by depth (shallowest first)
-  const manifestPaths = Object.keys(zip.files)
-    .filter(p => p.endsWith('manifest.json') && !p.includes('__MACOSX') && !p.includes('.DS_Store'))
+  const mps = Object.keys(zip.files)
+    .filter(p => p.endsWith('manifest.json') && !p.includes('__MACOSX'))
     .sort((a,b) => a.split('/').length - b.split('/').length);
 
-  for (const mp of manifestPaths) {
+  for (const mp of mps) {
     try {
-      const raw = await zip.files[mp].async('string');
-      const manifest = JSON.parse(stripComments(raw));
-      const rootPrefix = mp.replace('manifest.json', '');
+      const manifest = JSON.parse(stripComments(await zip.files[mp].async('string')));
+      const prefix = mp.replace('manifest.json', '');
       const mods = (manifest.modules || []).map(m => m.type);
-      // BP: has data, script. RP: has resources
-      let type = 'unk';
+      let type = null;
       if (mods.includes('resources')) type = 'rp';
       else if (mods.some(t => ['data','script','javascript'].includes(t))) type = 'bp';
-      if (type === 'unk') continue;
+      if (!type) continue;
 
       const files = {};
       for (const [path, entry] of Object.entries(zip.files)) {
-        if (entry.dir) continue;
-        if (!path.startsWith(rootPrefix)) continue;
-        if (path.includes('__MACOSX') || path.includes('.DS_Store')) continue;
-        const rel = path.slice(rootPrefix.length);
-        if (!rel) continue;
-        files[rel] = await entry.async('uint8array');
+        if (entry.dir || !path.startsWith(prefix) || path.includes('__MACOSX')) continue;
+        const rel = path.slice(prefix.length);
+        if (rel) files[rel] = await entry.async('uint8array');
       }
-
-      const packName = manifest.header?.name || rootPrefix.replace(/\/$/,'');
-      const packId = sanitizeId(rootPrefix || packName);
-
-      packs.push({ id: packId, name: packName, type, files, manifest, fileCount: Object.keys(files).length });
-    } catch(e) { /* skip bad manifests */ }
+      const name = manifest.header?.name || prefix.replace(/\/$/, '');
+      packs.push({ id: sanitizeId(prefix || name), name, type, files, manifest, fileCount: Object.keys(files).length });
+    } catch(e) { /* skip */ }
   }
   return packs;
 }
 
-// ══════════════════════════════════════
+// ════════════════════════════════════════════════
+// PACK ICON HANDLING
+// ════════════════════════════════════════════════
+async function handleIconUpload(type, input) {
+  const file = input.files[0];
+  if (!file) return;
+  const buf = await file.arrayBuffer();
+  const data = new Uint8Array(buf);
+  const url = URL.createObjectURL(file);
+  const previewId = type==='bp' ? 'bpIconPreview' : 'rpIconPreview';
+  const slotId    = type==='bp' ? 'bpIconSlot'    : 'rpIconSlot';
+  const hintId    = type==='bp' ? 'bpIconHint'    : 'rpIconHint';
+  if (type === 'bp') customBPIcon = data;
+  else               customRPIcon = data;
+  document.getElementById(previewId).innerHTML = `<img src="${url}" alt="icon">`;
+  document.getElementById(slotId).classList.add('has-icon');
+  document.getElementById(hintId).textContent = '✓ ' + file.name;
+  input.value = '';
+  showToast(`${type.toUpperCase()} icon set!`, 'ok');
+}
+function clearIcon(type) {
+  const icon = type==='bp' ? 'bpIcon' : 'rpIcon';
+  if (type==='bp') customBPIcon = null; else customRPIcon = null;
+  document.getElementById(icon+'Preview').innerHTML = `<span>${type==='bp'?'⚙':'🎨'}</span>`;
+  document.getElementById(icon+'Slot').classList.remove('has-icon');
+  document.getElementById(icon+'Hint').textContent = 'Click to upload PNG';
+}
+
+// ════════════════════════════════════════════════
 // RENDER ADDON LIST
-// ══════════════════════════════════════
+// ════════════════════════════════════════════════
 function renderAddonList() {
   const list = document.getElementById('addonList');
   if (!loadedAddons.length) { list.innerHTML = ''; updateSummary(); return; }
-
   list.innerHTML = loadedAddons.map((addon, ai) => {
-    const bpPacks = addon.packs.filter(p=>p.type==='bp');
-    const rpPacks = addon.packs.filter(p=>p.type==='rp');
-    const totalFiles = addon.packs.reduce((s,p)=>s+p.fileCount,0);
-    const hasScripts = addon.packs.some(p => p.files && Object.keys(p.files).some(f=>f.startsWith('scripts/')));
-
+    const bpN = addon.packs.filter(p=>p.type==='bp').length;
+    const rpN = addon.packs.filter(p=>p.type==='rp').length;
+    const tot = addon.packs.reduce((s,p)=>s+p.fileCount,0);
+    const hasSc = addon.packs.some(p=>Object.keys(p.files).some(f=>f.startsWith('scripts/')));
     const packsHtml = addon.packs.map(p => {
-      const icon = p.type==='bp' ? '⚙' : '🎨';
-      const scriptCount = Object.keys(p.files).filter(f=>f.startsWith('scripts/')).length;
-      const entryPoint = p.manifest?.modules?.find(m=>m.type==='script')?.entry || '';
+      const sc = Object.keys(p.files).filter(f=>f.startsWith('scripts/')).length;
+      const entry = p.manifest?.modules?.find(m=>m.type==='script')?.entry||'';
       return `<div class="pack-row">
-        <span class="pack-row-icon">${icon}</span>
+        <span class="pack-row-icon">${p.type==='bp'?'⚙':'🎨'}</span>
         <div class="pack-row-info">
           <div class="pack-row-name">${escHtml(p.name)} <span class="badge ${p.type==='bp'?'b-bp':'b-rp'}">${p.type.toUpperCase()}</span></div>
-          <div class="pack-row-meta">
-            ${p.fileCount} files · v${fmtVer(p.manifest?.header?.version)}
-            ${scriptCount>0?` · 📜 ${scriptCount} script files`:''}
-            ${entryPoint?` · entry: ${entryPoint}`:''}
-          </div>
+          <div class="pack-row-meta">${p.fileCount} files · v${fmtVer(p.manifest?.header?.version)}${sc?` · 📜 ${sc} scripts`:''}${entry?` · ${entry}`:''}</div>
         </div>
       </div>`;
     }).join('');
-
-    return `<div class="addon-card" id="ac_${ai}">
-      <div class="addon-card-header" onclick="toggleAddon(${ai})">
+    return `<div class="addon-card">
+      <div class="addon-card-header" onclick="togPacks(${ai})">
         <span class="addon-icon">📦</span>
         <div class="addon-info">
           <div class="addon-name">${escHtml(addon.filename)}</div>
-          <div class="addon-meta">${addon.packs.length} pack(s) · ${totalFiles} files total</div>
+          <div class="addon-meta">${addon.packs.length} pack(s) · ${tot} files total</div>
           <div class="addon-badges">
-            ${bpPacks.length?`<span class="badge b-bp">⚙ BP ×${bpPacks.length}</span>`:''}
-            ${rpPacks.length?`<span class="badge b-rp">🎨 RP ×${rpPacks.length}</span>`:''}
-            ${hasScripts?`<span class="badge b-scripts">📜 SCRIPTS</span>`:''}
-            <span class="badge b-files">📄 ${totalFiles} FILES</span>
+            ${bpN?`<span class="badge b-bp">⚙ BP ×${bpN}</span>`:''}
+            ${rpN?`<span class="badge b-rp">🎨 RP ×${rpN}</span>`:''}
+            ${hasSc?`<span class="badge b-scr">📜 SCRIPTS</span>`:''}
+            <span class="badge b-f">📄 ${tot}</span>
           </div>
         </div>
-        <span class="toggle-arrow" id="arr_${ai}">▶</span>
-        <button class="addon-remove" onclick="event.stopPropagation();removeAddon(${ai})">✕</button>
+        <span class="tarr" id="arr${ai}">▶</span>
+        <button class="addon-remove" onclick="event.stopPropagation();rmAddon(${ai})">✕</button>
       </div>
-      <div class="addon-packs" id="ap_${ai}">${packsHtml}</div>
+      <div class="addon-packs" id="ap${ai}">${packsHtml}</div>
     </div>`;
   }).join('');
-
   updateSummary();
 }
-
-function toggleAddon(ai) {
-  const packs = document.getElementById(`ap_${ai}`);
-  const arr   = document.getElementById(`arr_${ai}`);
-  packs.classList.toggle('open');
-  arr.classList.toggle('open');
+function togPacks(ai) {
+  document.getElementById('ap'+ai).classList.toggle('open');
+  document.getElementById('arr'+ai).classList.toggle('open');
 }
-
-function removeAddon(ai) {
-  loadedAddons.splice(ai, 1);
+function rmAddon(ai) {
+  loadedAddons.splice(ai,1);
   renderAddonList();
   document.getElementById('btnMerge').disabled = getAllPacks().length < 2;
 }
-
 function updateSummary() {
-  const bar = document.getElementById('summaryBar');
-  const allPacks = getAllPacks();
-  if (!allPacks.length) { bar.style.display='none'; return; }
+  const allP = getAllPacks();
+  const bar = document.getElementById('sumBar');
+  if (!allP.length) { bar.style.display='none'; return; }
   bar.style.display='flex';
-  document.getElementById('sumAddons').textContent = loadedAddons.length;
-  document.getElementById('sumBP').textContent = allPacks.filter(p=>p.type==='bp').length;
-  document.getElementById('sumRP').textContent = allPacks.filter(p=>p.type==='rp').length;
-  document.getElementById('sumFiles').textContent = allPacks.reduce((s,p)=>s+p.fileCount,0);
+  document.getElementById('sCnt').textContent = loadedAddons.length;
+  document.getElementById('sBP').textContent  = allP.filter(p=>p.type==='bp').length;
+  document.getElementById('sRP').textContent  = allP.filter(p=>p.type==='rp').length;
+  document.getElementById('sF').textContent   = allP.reduce((s,p)=>s+p.fileCount,0);
 }
-
-function getAllPacks() {
-  return loadedAddons.flatMap(a => a.packs);
-}
-
+function getAllPacks() { return loadedAddons.flatMap(a=>a.packs); }
 function clearAll() {
-  loadedAddons = [];
+  loadedAddons=[];
+  clearIcon('bp'); clearIcon('rp');
   renderAddonList();
-  document.getElementById('btnMerge').disabled = true;
-  document.getElementById('logBox').innerHTML = '';
+  document.getElementById('btnMerge').disabled=true;
+  document.getElementById('logBox').innerHTML='';
   document.getElementById('logBox').classList.remove('on');
   document.getElementById('pw').classList.remove('on');
-  document.getElementById('resPanel').style.display = 'none';
+  document.getElementById('resPanel').style.display='none';
 }
 
-// ══════════════════════════════════════
-// MERGE
-// ══════════════════════════════════════
+// ════════════════════════════════════════════════
+// MERGE ORCHESTRATION
+// ════════════════════════════════════════════════
 async function startMerge() {
-  const allPacks = getAllPacks();
-  const bpPacks  = allPacks.filter(p=>p.type==='bp');
-  const rpPacks  = allPacks.filter(p=>p.type==='rp');
+  const allP = getAllPacks();
+  const bpPs = allP.filter(p=>p.type==='bp');
+  const rpPs = allP.filter(p=>p.type==='rp');
+  if (!allP.length) { showToast('No packs loaded!','er'); return; }
 
-  if (!allPacks.length) { showToast('No packs loaded!','er'); return; }
-
-  document.getElementById('btnMerge').disabled = true;
-  document.getElementById('logBox').innerHTML = '';
+  document.getElementById('btnMerge').disabled=true;
+  document.getElementById('logBox').innerHTML='';
   document.getElementById('logBox').classList.add('on');
   document.getElementById('pw').classList.add('on');
-  document.getElementById('resPanel').style.display = 'none';
+  document.getElementById('resPanel').style.display='none';
 
-  setP(2, 'Preparing...');
-  await tick();
-
+  setP(2,'Preparing...');await tick();
   const mcaddon = new JSZip();
   const results = [];
-  const outAddonName = document.getElementById('outName').value || 'Merged_Addon';
-  const bpFolderName = document.getElementById('bpName').value || 'Unified_BP';
-  const rpFolderName = document.getElementById('rpName').value || 'Unified_RP';
+  const outName = v('outName','Merged_Addon');
 
-  if (bpPacks.length) {
-    setP(5, `Merging ${bpPacks.length} Behavior Packs...`);
-    await tick();
-    const res = await mergeBP(bpPacks, mcaddon.folder(bpFolderName));
-    res.folderName = bpFolderName;
+  if (bpPs.length) {
+    setP(5,`Merging ${bpPs.length} Behavior Pack(s)...`); await tick();
+    const res = await mergeBP(bpPs, mcaddon.folder(v('bpName','Unified_BP')));
+    res.folderName = v('bpName','Unified_BP');
     results.push(res);
-    setP(50, 'BP done!');
-    await tick();
-  } else {
-    addLog('warn','--','No BP packs found — skipping BP merge');
-  }
+    setP(50,'BP done!'); await tick();
+  } else addLog('warn','--','No BP packs — skipping');
 
-  if (rpPacks.length) {
-    setP(55, `Merging ${rpPacks.length} Resource Packs...`);
-    await tick();
-    const res = await mergeRP(rpPacks, mcaddon.folder(rpFolderName));
-    res.folderName = rpFolderName;
+  if (rpPs.length) {
+    setP(55,`Merging ${rpPs.length} Resource Pack(s)...`); await tick();
+    const res = await mergeRP(rpPs, mcaddon.folder(v('rpName','Unified_RP')));
+    res.folderName = v('rpName','Unified_RP');
     results.push(res);
-    setP(95, 'RP done!');
-    await tick();
-  } else {
-    addLog('warn','--','No RP packs found — skipping RP merge');
-  }
+    setP(95,'RP done!'); await tick();
+  } else addLog('warn','--','No RP packs — skipping');
 
-  setP(97, 'Generating .mcaddon...');
-  await tick();
+  setP(97,'Generating .mcaddon...'); await tick();
   const blob = await mcaddon.generateAsync({type:'blob',compression:'DEFLATE',compressionOptions:{level:6}});
-  saveAs(blob, `${outAddonName}.mcaddon`);
+  saveAs(blob, `${outName}.mcaddon`);
   const mb = (blob.size/1024/1024).toFixed(2);
-  addLog('ok','✓', `${outAddonName}.mcaddon downloaded! (${mb} MB)`);
-  setP(100, `✓ Done! ${outAddonName}.mcaddon (${mb} MB)`);
-
-  renderResults(results, outAddonName, mb);
-  document.getElementById('btnMerge').disabled = false;
+  addLog('ok','✓',`${outName}.mcaddon downloaded! (${mb} MB)`);
+  setP(100,`✓ ${outName}.mcaddon (${mb} MB)`);
+  renderResults(results, outName, mb);
+  document.getElementById('btnMerge').disabled=false;
 }
 
-// ══════════════════════════════════════
-// BP MERGE
-// ══════════════════════════════════════
-async function mergeBP(packs, outFolder) {
-  addLog('info','BP',`Merging ${packs.length} BP(s): ${packs.map(p=>p.id).join(', ')}`);
-  const reg = {};
-  const stats = {files:0,scripts:0,conflicts:0,merged:0};
+// ════════════════════════════════════════════════
+// ── SMART DICT MERGE HELPER ──
+// Scans all packs for files in a directory, merges inner dict key if conflict
+// ════════════════════════════════════════════════
+function smartDirMerge(packs, dirPrefix, innerKey, outFolder, reg, stats, logTag) {
+  // Build fileMap: rel -> [{id, data}]
+  const fm = {};
+  for (const pack of packs) {
+    for (const [r, d] of Object.entries(pack.files)) {
+      if (!r.startsWith(dirPrefix)) continue;
+      if (!r.endsWith('.json')) continue;
+      if (!fm[r]) fm[r] = [];
+      fm[r].push({id: pack.id, data: d});
+    }
+  }
+  for (const [r, entries] of Object.entries(fm)) {
+    if (entries.length < 2) continue; // no conflict, handle in bulk
+    // Merge all inner dicts
+    let merged = {}, fmt = '1.10.0', hasContent = false;
+    for (const {id, data} of entries) {
+      const d = pjl(dec(data)); if (!d) continue;
+      fmt = d.format_version || fmt;
+      const inner = d[innerKey] || {};
+      for (const [k, val] of Object.entries(inner)) {
+        if (!(k in merged)) { merged[k] = val; hasContent = true; }
+      }
+    }
+    if (hasContent) {
+      outFolder.file(r, JSON.stringify({format_version: fmt, [innerKey]: merged}, null, 2));
+      addLog('mrg', logTag, `${r.split('/').pop()} → merged ${Object.keys(merged).length} ${innerKey}`);
+      stats.merged++;
+    }
+    reg[r] = 1; // mark as handled
+  }
+}
 
+// ════════════════════════════════════════════════
+// BP MERGE
+// ════════════════════════════════════════════════
+async function mergeBP(packs, out) {
+  addLog('info','BP',`Merging ${packs.length} BP(s)`);
+  const reg = {}, stats = {files:0, scripts:0, conflicts:0, merged:0};
+  const SKIP = new Set(['manifest.json','pack_icon.png','asuki.net.txt']);
+
+  // ── Explicitly merged special files ──
   // tick.json
   { let vals=[];
-    for (const p of packs){const d=gj(p,'functions/tick.json');if(d)for(const v of(d.values||[]))if(!vals.includes(v))vals.push(v);}
-    if(vals.length){outFolder.file('functions/tick.json',JSON.stringify({values:vals},null,2));addLog('mrg','BP',`tick.json → ${vals.length} values`);stats.merged++;}
+    for (const p of packs){const d=gj(p,'functions/tick.json');if(d)for(const val of(d.values||[]))if(!vals.includes(val))vals.push(val);}
+    if(vals.length){out.file('functions/tick.json',J({values:vals}));addLog('mrg','BP',`tick.json → ${vals.length} values`);stats.merged++;}
     reg['functions/tick.json']=1; }
 
   // item_catalog
   { let cats=[],seen=new Set();
-    for(const p of packs){const d=gj(p,'item_catalog/crafting_item_catalog.json');if(!d)continue;for(const c of(d['minecraft:crafting_items_catalog']?.categories||[])){const k=JSON.stringify(c);if(!seen.has(k)){seen.add(k);cats.push(c);}}}
-    if(cats.length){outFolder.file('item_catalog/crafting_item_catalog.json',JSON.stringify({'minecraft:crafting_items_catalog':{categories:cats}},null,2));addLog('mrg','BP',`item_catalog → ${cats.length} categories`);stats.merged++;}
+    for(const p of packs){const d=gj(p,'item_catalog/crafting_item_catalog.json');if(!d)continue;
+      for(const c of(d['minecraft:crafting_items_catalog']?.categories||[])){const k=JSON.stringify(c);if(!seen.has(k)){seen.add(k);cats.push(c);}}}
+    if(cats.length){out.file('item_catalog/crafting_item_catalog.json',J({'minecraft:crafting_items_catalog':{categories:cats}}));addLog('mrg','BP',`item_catalog → ${cats.length} categories`);stats.merged++;}
     reg['item_catalog/crafting_item_catalog.json']=1; }
 
   // lang files
   { const lm={};
-    for(const p of packs)for(const[r,d]of Object.entries(p.files)){if(!r.startsWith('texts/')||!r.endsWith('.lang'))continue;if(!lm[r])lm[r]={};const t=dec(d);for(const ln of t.split('\n')){const s=ln.trim();if(s.includes('=')&&!s.startsWith('#')){const[k,...v]=s.split('=');if(!(k.trim()in lm[r]))lm[r][k.trim()]=v.join('=').trim();}}}
-    let tot=0;for(const[r,e]of Object.entries(lm)){outFolder.file(r,Object.entries(e).map(([k,v])=>`${k}=${v}`).join('\n'));reg[r]=1;tot+=Object.keys(e).length;}
+    for(const p of packs)for(const[r,d]of Object.entries(p.files)){
+      if(!r.startsWith('texts/')||!r.endsWith('.lang'))continue;
+      if(!lm[r])lm[r]={};
+      const t=dec(d);for(const ln of t.split('\n')){const s=ln.trim();
+        if(s.includes('=')&&!s.startsWith('#')){const[k,...vv]=s.split('=');const key=k.trim();if(!(key in lm[r]))lm[r][key]=vv.join('=').trim();}}}
+    let tot=0;for(const[r,e]of Object.entries(lm)){out.file(r,Object.entries(e).map(([k,vv])=>`${k}=${vv}`).join('\n'));reg[r]=1;tot+=Object.keys(e).length;}
     if(tot)addLog('mrg','BP',`lang → ${tot} keys`); }
 
   // languages.json
   { let ls=[];for(const p of packs){const d=gj(p,'texts/languages.json');if(Array.isArray(d))for(const l of d)if(!ls.includes(l))ls.push(l);}
-    if(ls.length){outFolder.file('texts/languages.json',JSON.stringify(ls,null,2));reg['texts/languages.json']=1;} }
+    if(ls.length){out.file('texts/languages.json',J(ls));reg['texts/languages.json']=1;} }
 
-  // scripts — namespaced
+  // ── Smart dict-merge for BP animation_controllers & animations ──
+  smartDirMerge(packs,'animation_controllers/','animation_controllers',out,reg,stats,'BP');
+  smartDirMerge(packs,'animations/','animations',out,reg,stats,'BP');
+
+  // ── Scripts — namespaced per pack ──
   const imports=[];
   for(const pack of packs){
     const sfs=Object.entries(pack.files).filter(([r])=>r.startsWith('scripts/'));
     if(!sfs.length)continue;
-    const ns=pack.id;
     for(const[r,d]of sfs){
       const inner=r.slice('scripts/'.length);
       let data=d;
       if(inner==='main.js'||inner.endsWith('/main.js')){let t=dec(d);t=fixBare(t);data=enc(t);}
-      outFolder.file(`scripts/${ns}/${inner}`,data);
-      stats.scripts++;
+      out.file(`scripts/${pack.id}/${inner}`,data);stats.scripts++;
     }
-    const entry=pack.manifest?.modules?.find(m=>m.type==='script')?.entry||'scripts/main.js';
-    const inner=entry.replace(/^scripts\//,'');
-    imports.push(`// ${pack.name}\nimport "./${ns}/${inner}";`);
-    addLog('ok','BP',`scripts → scripts/${ns}/ (${sfs.length} files)`);
-    reg['__scripts__'+ns]=1;
+    const entry=(pack.manifest?.modules?.find(m=>m.type==='script')?.entry||'scripts/main.js').replace(/^scripts\//,'');
+    imports.push(`// ${pack.name}\nimport "./${pack.id}/${entry}";`);
+    addLog('ok','BP',`scripts/${pack.id}/ (${sfs.length} files)`);
+    for(const[r]of sfs)reg[r]=1;
   }
   if(imports.length){
-    outFolder.file('scripts/main.js',`// Unified Behavior Pack Entry\n// Auto-generated by AddonMerger\n\n${imports.join('\n\n')}\n`);
+    out.file('scripts/main.js',`// Unified BP Entry — Auto-generated\n\n${imports.join('\n\n')}\n`);
     addLog('ok','BP','Created unified scripts/main.js');
   }
 
-  // all other files
-  const SKIP=new Set(['manifest.json','pack_icon.png','asuki.net.txt']);
+  // ── Bulk copy — ALL conflicts renamed (equal treatment) ──
   for(const pack of packs){
     for(const[r,d]of Object.entries(pack.files)){
-      if(SKIP.has(r)||r.startsWith('scripts/')||reg[r])continue;
+      if(SKIP.has(r))continue;
+      if(r.startsWith('scripts/'))continue;
       if(r.startsWith('texts/')&&r.endsWith('.lang'))continue;
+      if(reg[r]===1)continue;          // explicitly merged special
       if(r in reg){
+        // CONFLICT → rename with pack prefix (preserves all versions equally)
         const nr=renameConflict(r,pack.id);
-        outFolder.file(nr,d);
+        out.file(nr,d);
         addLog('warn','BP',`Conflict: ${r.split('/').pop()} → ${pack.id}_${r.split('/').pop()}`);
         stats.conflicts++;
       } else {
-        outFolder.file(r,d);
+        out.file(r,d);
         reg[r]=pack.id;
         stats.files++;
       }
     }
   }
 
-  // pack_icon
-  const pi=packs.find(p=>p.files['pack_icon.png']);
-  if(pi)outFolder.file('pack_icon.png',pi.files['pack_icon.png']);
+  // pack_icon — custom > original
+  if (customBPIcon) { out.file('pack_icon.png',customBPIcon); addLog('ok','BP','Custom pack icon applied'); }
+  else { const pi=packs.find(p=>p.files['pack_icon.png']); if(pi)out.file('pack_icon.png',pi.files['pack_icon.png']); }
 
   // manifest
   const bpUUID=uuid4(),modUUID=uuid4(),scrUUID=uuid4();
-  const ver=pv(document.getElementById('bpName').value,'1.0.0');
-  const eng=pv(document.getElementById('minEng').value,'1.21.130');
+  const eng=pv(v('minEng','1.21.130'));
   const deps=[];
-  // Collect all RP UUIDs from loaded addons
   getAllPacks().filter(p=>p.type==='rp').forEach(p=>{if(p.manifest?.header?.uuid)deps.push({uuid:p.manifest.header.uuid,version:p.manifest.header.version||[1,0,0]});});
-  // @minecraft/server — highest version across BPs
   const smv={};
   for(const p of packs)for(const d of(p.manifest?.dependencies||[]))if(d.module_name){if(!smv[d.module_name]||cmpVer(d.version,smv[d.module_name])>0)smv[d.module_name]=d.version;}
   for(const[mn,mv]of Object.entries(smv))deps.push({module_name:mn,version:mv});
-
   const mods=[{type:'data',uuid:modUUID,version:[1,0,0]}];
   if(imports.length)mods.push({type:'script',language:'javascript',uuid:scrUUID,version:[1,0,0],entry:'scripts/main.js'});
-
-  const mf={format_version:2,header:{name:document.getElementById('bpName').value||'Unified_BP',description:`Merged: ${packs.map(p=>p.name).join(', ')}`,uuid:bpUUID,version:[1,0,0],min_engine_version:eng},modules:mods,dependencies:deps,metadata:{product_type:'addon',authors:['AddonMerger']}};
-  outFolder.file('manifest.json',JSON.stringify(mf,null,2));
-  addLog('ok','BP',`manifest.json → UUID ${bpUUID.slice(0,8)}...`);
+  out.file('manifest.json',J({format_version:2,header:{name:v('bpName','Unified_BP'),description:`Merged: ${packs.map(p=>p.name).join(', ')}`,uuid:bpUUID,version:[1,0,0],min_engine_version:eng},modules:mods,dependencies:deps,metadata:{product_type:'addon',authors:['AddonMerger']}}));
+  addLog('ok','BP',`manifest → UUID ${bpUUID.slice(0,8)}...`);
+  addLog('ok','BP',`Done! files:${stats.files} scripts:${stats.scripts} merged:${stats.merged} renamed:${stats.conflicts}`);
   stats.type='bp'; stats.packCount=packs.length; stats.uuid=bpUUID;
-  addLog('ok','BP',`BP merge complete! ${stats.files} files, ${stats.scripts} script files, ${stats.conflicts} renamed`);
   return stats;
 }
 
-// ══════════════════════════════════════
+// ════════════════════════════════════════════════
 // RP MERGE
-// ══════════════════════════════════════
-async function mergeRP(packs, outFolder) {
-  addLog('info','RP',`Merging ${packs.length} RP(s): ${packs.map(p=>p.id).join(', ')}`);
-  const reg={};
-  const stats={files:0,conflicts:0,merged:0};
-
-  const mergeKV=(rel,getObj)=>{let m={};for(const p of packs){const d=gj(p,rel);if(d){const o=getObj(d);for(const[k,v]of Object.entries(o))if(!(k in m))m[k]=v;}}return m;};
+// ════════════════════════════════════════════════
+async function mergeRP(packs, out) {
+  addLog('info','RP',`Merging ${packs.length} RP(s)`);
+  const reg = {}, stats = {files:0, conflicts:0, merged:0};
+  const SKIP = new Set(['manifest.json','pack_icon.png','asuki.net.txt']);
+  const mkv=(rel,getObj)=>{let m={};for(const p of packs){const d=gj(p,rel);if(d){const o=getObj(d);for(const[k,val]of Object.entries(o))if(!(k in m))m[k]=val;}}return m;};
 
   // blocks.json
-  { const m=mergeKV('blocks.json',d=>Object.fromEntries(Object.entries(d).filter(([k])=>k!=='format_version')));
-    if(Object.keys(m).length){outFolder.file('blocks.json',JSON.stringify({format_version:'1.13.0',...m},null,2));addLog('mrg','RP',`blocks.json → ${Object.keys(m).length} entries`);stats.merged++;}
+  { const m=mkv('blocks.json',d=>Object.fromEntries(Object.entries(d).filter(([k])=>k!=='format_version')));
+    if(Object.keys(m).length){out.file('blocks.json',J({format_version:'1.13.0',...m}));addLog('mrg','RP',`blocks.json → ${Object.keys(m).length}`);stats.merged++;}
     reg['blocks.json']=1; }
 
   // sounds.json
   { let m={};for(const p of packs){const d=gj(p,'sounds.json');if(d)m=deepMerge(m,d);}
-    if(Object.keys(m).length){outFolder.file('sounds.json',JSON.stringify(m,null,2));addLog('mrg','RP','sounds.json merged');stats.merged++;}
+    if(Object.keys(m).length){out.file('sounds.json',J(m));addLog('mrg','RP','sounds.json merged');stats.merged++;}
     reg['sounds.json']=1; }
 
   // sound_definitions
   { let defs={},fmt='1.14.0',wrap=false;
-    for(const p of packs){const d=gj(p,'sounds/sound_definitions.json');if(!d)continue;if(d.sound_definitions){wrap=true;fmt=d.format_version||fmt;for(const[k,v]of Object.entries(d.sound_definitions))if(!(k in defs))defs[k]=v;}else for(const[k,v]of Object.entries(d))if(k!=='format_version'&&!(k in defs))defs[k]=v;}
-    if(Object.keys(defs).length){outFolder.file('sounds/sound_definitions.json',JSON.stringify(wrap?{format_version:fmt,sound_definitions:defs}:defs,null,2));addLog('mrg','RP',`sound_definitions → ${Object.keys(defs).length} defs`);stats.merged++;}
+    for(const p of packs){const d=gj(p,'sounds/sound_definitions.json');if(!d)continue;
+      if(d.sound_definitions){wrap=true;fmt=d.format_version||fmt;for(const[k,val]of Object.entries(d.sound_definitions))if(!(k in defs))defs[k]=val;}
+      else for(const[k,val]of Object.entries(d))if(k!=='format_version'&&!(k in defs))defs[k]=val;}
+    if(Object.keys(defs).length){out.file('sounds/sound_definitions.json',J(wrap?{format_version:fmt,sound_definitions:defs}:defs));addLog('mrg','RP',`sound_defs → ${Object.keys(defs).length}`);stats.merged++;}
     reg['sounds/sound_definitions.json']=1; }
 
   // music_definitions
-  { const m=mergeKV('sounds/music_definitions.json',d=>d);
-    if(Object.keys(m).length){outFolder.file('sounds/music_definitions.json',JSON.stringify(m,null,2));addLog('mrg','RP',`music_definitions → ${Object.keys(m).length}`);stats.merged++;}
+  { const m=mkv('sounds/music_definitions.json',d=>d);
+    if(Object.keys(m).length){out.file('sounds/music_definitions.json',J(m));addLog('mrg','RP',`music_defs → ${Object.keys(m).length}`);stats.merged++;}
     reg['sounds/music_definitions.json']=1; }
 
   // terrain_texture
-  { const m=mergeKV('textures/terrain_texture.json',d=>d.texture_data||{});
-    if(Object.keys(m).length){outFolder.file('textures/terrain_texture.json',JSON.stringify({resource_pack_name:'vanilla',texture_name:'atlas.terrain',texture_data:m},null,2));addLog('mrg','RP',`terrain_texture → ${Object.keys(m).length}`);stats.merged++;}
+  { const m=mkv('textures/terrain_texture.json',d=>d.texture_data||{});
+    if(Object.keys(m).length){out.file('textures/terrain_texture.json',J({resource_pack_name:'vanilla',texture_name:'atlas.terrain',texture_data:m}));addLog('mrg','RP',`terrain_texture → ${Object.keys(m).length}`);stats.merged++;}
     reg['textures/terrain_texture.json']=1; }
 
   // item_texture
-  { const m=mergeKV('textures/item_texture.json',d=>d.texture_data||{});
-    if(Object.keys(m).length){outFolder.file('textures/item_texture.json',JSON.stringify({resource_pack_name:'vanilla',texture_name:'atlas.items',texture_data:m},null,2));addLog('mrg','RP',`item_texture → ${Object.keys(m).length}`);stats.merged++;}
+  { const m=mkv('textures/item_texture.json',d=>d.texture_data||{});
+    if(Object.keys(m).length){out.file('textures/item_texture.json',J({resource_pack_name:'vanilla',texture_name:'atlas.items',texture_data:m}));addLog('mrg','RP',`item_texture → ${Object.keys(m).length}`);stats.merged++;}
     reg['textures/item_texture.json']=1; }
 
-  // flipbook
+  // flipbook_textures
   { let arr=[],seen=new Set();
     for(const p of packs){const d=gj(p,'textures/flipbook_textures.json');(Array.isArray(d)?d:[]).forEach(e=>{const k=JSON.stringify(e);if(!seen.has(k)){seen.add(k);arr.push(e);}});}
-    if(arr.length){outFolder.file('textures/flipbook_textures.json',JSON.stringify(arr,null,2));addLog('mrg','RP',`flipbook → ${arr.length}`);stats.merged++;}
+    if(arr.length){out.file('textures/flipbook_textures.json',J(arr));addLog('mrg','RP',`flipbook → ${arr.length}`);stats.merged++;}
     reg['textures/flipbook_textures.json']=1; }
 
   // textures_list
   { let arr=[],seen=new Set();
     for(const p of packs){const d=gj(p,'textures/textures_list.json');(Array.isArray(d)?d:[]).forEach(e=>{if(!seen.has(e)){seen.add(e);arr.push(e);}});}
-    if(arr.length){outFolder.file('textures/textures_list.json',JSON.stringify(arr,null,2));addLog('mrg','RP',`textures_list → ${arr.length}`);stats.merged++;}
+    if(arr.length){out.file('textures/textures_list.json',J(arr));addLog('mrg','RP',`textures_list → ${arr.length}`);stats.merged++;}
     reg['textures/textures_list.json']=1; }
 
   // entity.material
-  { let mats={},ver='1.0.0';
-    for(const p of packs){const raw=gr(p,'materials/entity.material');if(!raw)continue;const d=pjl(raw);if(!d)continue;const m=d.materials||d;for(const[k,v]of Object.entries(m)){if(k==='version'){ver=v;continue;}if(!(k in mats))mats[k]=v;}}
-    if(Object.keys(mats).length){outFolder.file('materials/entity.material',JSON.stringify({materials:{version:ver,...mats}},null,2));addLog('mrg','RP',`entity.material → ${Object.keys(mats).length} materials`);stats.merged++;}
+  { let mats={},matver='1.0.0';
+    for(const p of packs){const raw=gr(p,'materials/entity.material');if(!raw)continue;const d=pjl(raw);if(!d)continue;const m=d.materials||d;
+      for(const[k,val]of Object.entries(m)){if(k==='version'){matver=val;continue;}if(!(k in mats))mats[k]=val;}}
+    if(Object.keys(mats).length){out.file('materials/entity.material',J({materials:{version:matver,...mats}}));addLog('mrg','RP',`entity.material → ${Object.keys(mats).length}`);stats.merged++;}
     reg['materials/entity.material']=1; }
 
-  // geometry merge
-  const GEO=['models/blocks/door.geo.json','models/blocks/fence.geo.json','models/blocks/fence_gate.geo.json',
-    'models/blocks/full_block.json','models/blocks/slab.geo.json','models/blocks/trapdoor.geo.json',
-    'models/entity/deer.geo.json','models/entity/raccoon.geo.json','models/entity/projectile.geo.json'];
-  for(const r of GEO){
-    let geos=[],ids=new Set(),fmt='1.12.0';
-    for(const p of packs){const d=gj(p,r);if(!d)continue;fmt=d.format_version||fmt;for(const g of(d['minecraft:geometry']||[])){const id=g.description?.identifier||'';if(!ids.has(id)){ids.add(id);geos.push(g);}}}
-    if(geos.length){outFolder.file(r,JSON.stringify({format_version:fmt,'minecraft:geometry':geos},null,2));if(geos.length>1)addLog('mrg','RP',`${r.split('/').pop()} → ${geos.length} geometries`);stats.merged++;}
-    reg[r]=1;
-  }
+  // ── Smart dict-merge: animation_controllers, render_controllers, animations (ALL files in dirs) ──
+  smartDirMerge(packs,'animation_controllers/','animation_controllers',out,reg,stats,'RP');
+  smartDirMerge(packs,'render_controllers/','render_controllers',out,reg,stats,'RP');
+  smartDirMerge(packs,'animations/','animations',out,reg,stats,'RP');
 
-  // animations merge
-  { let anims={},fmt='1.8.0';
-    for(const p of packs){const d=gj(p,'animations/projectile.animation.json');if(!d)continue;fmt=d.format_version||fmt;for(const[k,v]of Object.entries(d.animations||{}))if(!(k in anims))anims[k]=v;}
-    if(Object.keys(anims).length){outFolder.file('animations/projectile.animation.json',JSON.stringify({format_version:fmt,animations:anims},null,2));stats.merged++;}
-    reg['animations/projectile.animation.json']=1; }
+  // ── Smart geo model merge (minecraft:geometry array) — ALL .geo.json files ──
+  { const geoFiles = new Set();
+    for(const p of packs)for(const r of Object.keys(p.files))if(r.endsWith('.geo.json'))geoFiles.add(r);
+    for(const r of geoFiles){
+      const all=packs.map(p=>({id:p.id,d:gj(p,r)})).filter(x=>x.d);
+      if(all.length<2)continue;
+      let geos=[],ids=new Set(),fmt='1.12.0';
+      for(const{id,d}of all){fmt=d.format_version||fmt;for(const g of(d['minecraft:geometry']||[])){const gid=g.description?.identifier||'';if(!ids.has(gid)){ids.add(gid);geos.push(g);}}}
+      if(geos.length){out.file(r,J({format_version:fmt,'minecraft:geometry':geos}));addLog('mrg','RP',`${r.split('/').pop()} → ${geos.length} geometries`);stats.merged++;}
+      reg[r]=1;
+    }
+  }
 
   // lang files
   { const lm={};
-    for(const p of packs)for(const[r,d]of Object.entries(p.files)){if(!r.startsWith('texts/')||!r.endsWith('.lang'))continue;if(!lm[r])lm[r]={};const t=dec(d);for(const ln of t.split('\n')){const s=ln.trim();if(s.includes('=')&&!s.startsWith('#')){const[k,...v]=s.split('=');if(!(k.trim()in lm[r]))lm[r][k.trim()]=v.join('=').trim();}}}
-    let tot=0;for(const[r,e]of Object.entries(lm)){outFolder.file(r,Object.entries(e).map(([k,v])=>`${k}=${v}`).join('\n'));reg[r]=1;tot+=Object.keys(e).length;}
+    for(const p of packs)for(const[r,d]of Object.entries(p.files)){
+      if(!r.startsWith('texts/')||!r.endsWith('.lang'))continue;if(!lm[r])lm[r]={};
+      const t=dec(d);for(const ln of t.split('\n')){const s=ln.trim();if(s.includes('=')&&!s.startsWith('#')){const[k,...vv]=s.split('=');const key=k.trim();if(!(key in lm[r]))lm[r][key]=vv.join('=').trim();}}}
+    let tot=0;for(const[r,e]of Object.entries(lm)){out.file(r,Object.entries(e).map(([k,vv])=>`${k}=${vv}`).join('\n'));reg[r]=1;tot+=Object.keys(e).length;}
     if(tot)addLog('mrg','RP',`lang → ${tot} keys`); }
 
   // languages.json
   { let ls=[];for(const p of packs){const d=gj(p,'texts/languages.json');if(Array.isArray(d))for(const l of d)if(!ls.includes(l))ls.push(l);}
-    if(ls.length){outFolder.file('texts/languages.json',JSON.stringify(ls,null,2));reg['texts/languages.json']=1;} }
+    if(ls.length){out.file('texts/languages.json',J(ls));reg['texts/languages.json']=1;} }
 
-  // bulk copy
-  const SKIP=new Set(['manifest.json','pack_icon.png','asuki.net.txt']);
-  const RENAME_SET=new Set(['biomes/aspen_forest.client_biome.json','biomes/baobab_savanna.client_biome.json','biomes/prairie.client_biome.json','biomes/redwood_forest.json','biomes/windswept_desert.client_biome.json','fogs/pale_garden_fog_setting.json','fogs/prairie_fog.json']);
+  // ── Bulk copy — ALL conflicts renamed equally ──
   for(const pack of packs){
     for(const[r,d]of Object.entries(pack.files)){
-      if(SKIP.has(r)||reg[r])continue;
+      if(SKIP.has(r))continue;
       if(r.startsWith('texts/')&&r.endsWith('.lang'))continue;
-      if(r in reg||RENAME_SET.has(r)){
+      if(reg[r]===1)continue;        // explicitly merged
+      if(r in reg){
+        // CONFLICT → rename with pack prefix (ALL versions preserved equally)
         const nr=renameConflict(r,pack.id);
-        outFolder.file(nr,d);
+        out.file(nr,d);
         addLog('warn','RP',`Conflict: ${r.split('/').pop()} → ${pack.id}_${r.split('/').pop()}`);
         stats.conflicts++;
       } else {
-        outFolder.file(r,d);
+        out.file(r,d);
         reg[r]=pack.id;
         stats.files++;
       }
     }
   }
 
-  // pack_icon
-  const pi=packs.slice().sort((a,b)=>b.fileCount-a.fileCount)[0];
-  if(pi?.files['pack_icon.png'])outFolder.file('pack_icon.png',pi.files['pack_icon.png']);
+  // pack_icon — custom > original
+  if (customRPIcon) { out.file('pack_icon.png',customRPIcon); addLog('ok','RP','Custom pack icon applied'); }
+  else { const pi=packs.slice().sort((a,b)=>b.fileCount-a.fileCount)[0]; if(pi?.files['pack_icon.png'])out.file('pack_icon.png',pi.files['pack_icon.png']); }
 
   // manifest
   const rpUUID=uuid4(),modUUID=uuid4();
-  const ver=pv(document.getElementById('rpName').value,'1.0.0');
-  const eng=pv(document.getElementById('minEng').value,'1.21.130');
+  const eng=pv(v('minEng','1.21.130'));
   const bpDeps=getAllPacks().filter(p=>p.type==='bp').map(p=>({uuid:p.manifest?.header?.uuid,version:p.manifest?.header?.version||[1,0,0]})).filter(d=>d.uuid);
-  const mf={format_version:2,header:{name:document.getElementById('rpName').value||'Unified_RP',description:`Merged: ${packs.map(p=>p.name).join(', ')}`,uuid:rpUUID,version:[1,0,0],min_engine_version:eng},modules:[{type:'resources',uuid:modUUID,version:[1,0,0]}],dependencies:bpDeps,metadata:{product_type:'addon',authors:['AddonMerger']}};
-  outFolder.file('manifest.json',JSON.stringify(mf,null,2));
-  addLog('ok','RP',`manifest.json → UUID ${rpUUID.slice(0,8)}...`);
+  out.file('manifest.json',J({format_version:2,header:{name:v('rpName','Unified_RP'),description:`Merged: ${packs.map(p=>p.name).join(', ')}`,uuid:rpUUID,version:[1,0,0],min_engine_version:eng},modules:[{type:'resources',uuid:modUUID,version:[1,0,0]}],dependencies:bpDeps,metadata:{product_type:'addon',authors:['AddonMerger']}}));
+  addLog('ok','RP',`manifest → UUID ${rpUUID.slice(0,8)}...`);
+  addLog('ok','RP',`Done! files:${stats.files} merged:${stats.merged} renamed:${stats.conflicts}`);
   stats.type='rp'; stats.packCount=packs.length; stats.uuid=rpUUID;
-  addLog('ok','RP',`RP merge complete! ${stats.files} files, ${stats.conflicts} renamed`);
   return stats;
 }
 
-// ══════════════════════════════════════
+// ════════════════════════════════════════════════
 // RESULTS
-// ══════════════════════════════════════
+// ════════════════════════════════════════════════
 function renderResults(results, addonName, mb) {
   const panel=document.getElementById('resPanel');
-  const grid=document.getElementById('resGrid');
-  grid.innerHTML=`
-    <div class="res-card" style="grid-column:1/-1">
+  document.getElementById('resGrid').innerHTML=`
+    <div class="res-card" style="grid-column:1/-1;border-color:var(--gold)">
       <div class="res-icon">🎁</div>
       <div class="res-title" style="color:var(--gold)">${addonName}.mcaddon</div>
-      <div class="res-stats">Total size: <strong>${mb} MB</strong><br>
-      Addons merged: <strong>${loadedAddons.length}</strong></div>
+      <div class="res-stats">Size: <strong>${mb} MB</strong><br>Addons merged: <strong>${loadedAddons.length}</strong></div>
     </div>
     ${results.map(r=>`
     <div class="res-card">
       <div class="res-icon">${r.type==='bp'?'⚙':'🎨'}</div>
       <div class="res-title" style="color:${r.type==='bp'?'var(--orange)':'var(--diamond)'}">${r.folderName}</div>
       <div class="res-stats">
-        Packs merged: <strong>${r.packCount}</strong><br>
-        Files: <strong>${r.files}</strong><br>
-        Merged JSONs: <strong>${r.merged}</strong><br>
+        Packs: <strong>${r.packCount}</strong><br>
+        Files copied: <strong>${r.files}</strong><br>
+        JSONs merged: <strong>${r.merged}</strong><br>
         Conflicts renamed: <strong>${r.conflicts}</strong>
       </div>
-      <div style="font-size:5px;color:#555;word-break:break-all">UUID: ${r.uuid}</div>
+      <div style="font-size:5px;color:#444;word-break:break-all;margin-top:4px">UUID: ${r.uuid}</div>
     </div>`).join('')}`;
   panel.style.display='block';
   panel.scrollIntoView({behavior:'smooth'});
 }
 
-// ══════════════════════════════════════
+// ════════════════════════════════════════════════
 // UTILS
-// ══════════════════════════════════════
-const dec=d=>new TextDecoder('utf-8').decode(d);
-const enc=s=>new TextEncoder().encode(s);
-function gj(pack,rel){const d=pack.files[rel];if(!d)return null;return pjl(dec(d));}
+// ════════════════════════════════════════════════
+const dec = d => new TextDecoder('utf-8').decode(d);
+const enc = s => new TextEncoder().encode(s);
+const J   = o => JSON.stringify(o, null, 2);
+const v   = (id, def='') => document.getElementById(id)?.value || def;
+function gj(pack,rel){const d=pack.files[rel];return d?pjl(dec(d)):null;}
 function gr(pack,rel){const d=pack.files[rel];return d?dec(d):null;}
 function pjl(s){try{s=s.replace(/^\uFEFF/,'').replace(/\/\/[^\n]*/g,'').replace(/\/\*[\s\S]*?\*\//g,'');return JSON.parse(s);}catch{return null;}}
 function stripComments(s){return s.replace(/\/\/[^\n]*/g,'').replace(/\/\*[\s\S]*?\*\//g,'');}
-function deepMerge(a,b){const r={...a};for(const[k,v]of Object.entries(b)){if(k in r&&typeof r[k]==='object'&&!Array.isArray(r[k])&&typeof v==='object'&&!Array.isArray(v))r[k]=deepMerge(r[k],v);else if(!(k in r))r[k]=v;}return r;}
+function deepMerge(a,b){const r={...a};for(const[k,val]of Object.entries(b)){if(k in r&&typeof r[k]==='object'&&!Array.isArray(r[k])&&typeof val==='object'&&!Array.isArray(val))r[k]=deepMerge(r[k],val);else if(!(k in r))r[k]=val;}return r;}
 function sanitizeId(s){return s.toLowerCase().replace(/\.[^.]+$/,'').replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'').slice(0,16)||'pack';}
 function renameConflict(rel,id){const i=rel.lastIndexOf('/');const dir=i>=0?rel.slice(0,i+1):'';const name=i>=0?rel.slice(i+1):rel;return`${dir}${id}_${name}`;}
 function fixBare(code){return code.replace(/(?:from|import)\s+['"](?![@./])([\w/.:-]+)['"]/g,(m,s)=>m.replace(`'${s}'`,`'./${s}'`).replace(`"${s}"`,`"./${s}"`));}
 function uuid4(){return'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0,v=c==='x'?r:(r&0x3|0x8);return v.toString(16);});}
-function pv(s,def='1.0.0'){const p=(s||def).split('.').map(Number);while(p.length<3)p.push(0);return p.slice(0,3);}
+function pv(s){const p=(s||'1.21.130').split('.').map(Number);while(p.length<3)p.push(0);return p.slice(0,3);}
 function cmpVer(a,b){if(!a||!b)return 0;for(let i=0;i<3;i++)if((a[i]||0)!==(b[i]||0))return(a[i]||0)-(b[i]||0);return 0;}
-function fmtVer(v){if(!v)return'?';if(Array.isArray(v))return v.join('.');return String(v);}
+function fmtVer(v){return Array.isArray(v)?v.join('.'):String(v||'?');}
 function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function tick(){return new Promise(r=>setTimeout(r,0));}
 
 function addLog(type,tag,msg){
   const b=document.getElementById('logBox');
-  const d=document.createElement('div');d.className=`ll ${type}`;
+  const d=document.createElement('div');d.className='ll '+type;
   d.innerHTML=`<span class="lt">[${tag}]</span><span class="lm">${escHtml(msg)}</span>`;
   b.appendChild(d);b.scrollTop=b.scrollHeight;
 }
@@ -745,7 +803,7 @@ function setP(pct,txt){
 let _tt;
 function showToast(msg,type='ok'){
   const t=document.getElementById('toast');
-  t.textContent=msg;t.className=`toast on ${type}`;
+  t.textContent=msg;t.className='toast on '+type;
   clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('on'),3500);
 }
 </script>
