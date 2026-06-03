@@ -11,30 +11,27 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          node-version: '18'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Create Android Project
+      - name: Create PWABuilder project
         run: |
-          # WebView project template ကို ဆွဲချပါ
-          git clone https://github.com/googlesamples/android-webview.git temp
-          cp -r temp/app src/
-          cp index.html src/app/src/main/assets/
-
-      - name: Build APK
+          # PWA template ကိုသုံးမယ်
+          npx @pwabuilder/cli create --name "MC Addon Merger" --package com.mcmerger.app
+          cd my-pwa
+          cp ../index.html www/
+          
+      - name: Build APK with Bubblewrap
         run: |
-          cd src
-          chmod +x gradlew
-          ./gradlew assembleDebug
+          cd my-pwa
+          npm install
+          npx bubblewrap init --manifest https://yourusername.github.io/reponame/manifest.json
+          npx bubblewrap build
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: mc-addon-merger
-          path: src/app/build/outputs/apk/debug/*.apk
+          name: mc-merger-apk
+          path: my-pwa/android/app/build/outputs/apk/debug/*.apk
