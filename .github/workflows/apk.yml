@@ -1,0 +1,40 @@
+name: HTML to APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Create Android Project
+        run: |
+          # WebView project template ကို ဆွဲချပါ
+          git clone https://github.com/googlesamples/android-webview.git temp
+          cp -r temp/app src/
+          cp index.html src/app/src/main/assets/
+
+      - name: Build APK
+        run: |
+          cd src
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: mc-addon-merger
+          path: src/app/build/outputs/apk/debug/*.apk
