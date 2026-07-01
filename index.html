@@ -540,9 +540,16 @@ async function startMerge() {
   for (const w of engWarnings) addLog('warn','--',w);
   addLog('info','--',`min_engine_version → ${fmtVer(effEng)}`);
 
+  // Pre-generate the OUTPUT pack UUIDs up front so BP and RP can cross-reference
+  // each other with exactly ONE clean dependency entry — never the original
+  // source addons' UUIDs (those packs no longer exist standalone after merge,
+  // and leaving them in causes "missing dependency" errors on servers).
+  const outBpUUID = bpPs.length ? uuid4() : null;
+  const outRpUUID = rpPs.length ? uuid4() : null;
+
   if (bpPs.length) {
     setP(5,`Merging ${bpPs.length} Behavior Pack(s)...`); await tick();
-    const res = await mergeBP(bpPs, mcaddon.folder(v('bpName','Unified_BP')), effEng);
+    const res = await mergeBP(bpPs, mcaddon.folder(v('bpName','Unified_BP')), effEng, outBpUUID, outRpUUID);
     res.folderName = v('bpName','Unified_BP');
     results.push(res);
     setP(50,'BP done!'); await tick();
@@ -550,7 +557,7 @@ async function startMerge() {
 
   if (rpPs.length) {
     setP(55,`Merging ${rpPs.length} Resource Pack(s)...`); await tick();
-    const res = await mergeRP(rpPs, mcaddon.folder(v('rpName','Unified_RP')), effEng);
+    const res = await mergeRP(rpPs, mcaddon.folder(v('rpName','Unified_RP')), effEng, outRpUUID, outBpUUID);
     res.folderName = v('rpName','Unified_RP');
     results.push(res);
     setP(95,'RP done!'); await tick();
@@ -605,7 +612,7 @@ function smartDirMerge(packs, dirPrefix, innerKey, outFolder, reg, stats, logTag
 // ════════════════════════════════════════════════
 // BP MERGE
 // ════════════════════════════════════════════════
-async function mergeBP(packs, out, eng) {
+async function mergeBP(packs, out, eng, bpUUID, rpUUID) {
   addLog('info','BP',`Merging ${packs.length} BP(s)`);
   const reg = {}, stats = {files:0, scripts:0, conflicts:0, merged:0};
   const SKIP = new Set(['manifest.json','pack_icon.png','asuki.net.txt']);
@@ -689,9 +696,12 @@ async function mergeBP(packs, out, eng) {
   else { const pi=packs.find(p=>p.files['pack_icon.png']); if(pi)out.file('pack_icon.png',pi.files['pack_icon.png']); }
 
   // manifest
-  const bpUUID=uuid4(),modUUID=uuid4(),scrUUID=uuid4();
+  const modUUID=uuid4(),scrUUID=uuid4();
   const deps=[];
-  getAllPacks().filter(p=>p.type==='rp').forEach(p=>{if(p.manifest?.header?.uuid)deps.push({uuid:p.manifest.header.uuid,version:p.manifest.header.version||[1,0,0]});});
+  // Cross-reference the ONE newly merged RP (not the original source packs —
+  // those UUIDs no longer exist standalone in the output, and leaving them
+  // in produces dangling dependencies that fail to resolve on servers).
+  if(rpUUID)deps.push({uuid:rpUUID,version:[1,0,0]});
   const smv={};
   for(const p of packs)for(const d of(p.manifest?.dependencies||[]))if(d.module_name){if(!smv[d.module_name]||cmpVer(d.version,smv[d.module_name])>0)smv[d.module_name]=d.version;}
   for(const[mn,mv]of Object.entries(smv))deps.push({module_name:mn,version:mv});
@@ -707,7 +717,7 @@ async function mergeBP(packs, out, eng) {
 // ════════════════════════════════════════════════
 // RP MERGE
 // ════════════════════════════════════════════════
-async function mergeRP(packs, out, eng) {
+async function mergeRP(packs, out, eng, rpUUID, bpUUID) {
   addLog('info','RP',`Merging ${packs.length} RP(s)`);
   const reg = {}, stats = {files:0, conflicts:0, merged:0};
   const SKIP = new Set(['manifest.json','pack_icon.png','asuki.net.txt']);
@@ -820,8 +830,10 @@ async function mergeRP(packs, out, eng) {
   else { const pi=packs.slice().sort((a,b)=>b.fileCount-a.fileCount)[0]; if(pi?.files['pack_icon.png'])out.file('pack_icon.png',pi.files['pack_icon.png']); }
 
   // manifest
-  const rpUUID=uuid4(),modUUID=uuid4();
-  const bpDeps=getAllPacks().filter(p=>p.type==='bp').map(p=>({uuid:p.manifest?.header?.uuid,version:p.manifest?.header?.version||[1,0,0]})).filter(d=>d.uuid);
+  const modUUID=uuid4();
+  // Cross-reference the ONE newly merged BP (not the original source packs —
+  // same dangling-dependency issue as the BP side).
+  const bpDeps = bpUUID ? [{uuid:bpUUID,version:[1,0,0]}] : [];
   out.file('manifest.json',J({format_version:2,header:{name:v('rpName','Unified_RP'),description:`Merged: ${packs.map(p=>p.name).join(', ')}`,uuid:rpUUID,version:[1,0,0],min_engine_version:eng},modules:[{type:'resources',uuid:modUUID,version:[1,0,0]}],dependencies:bpDeps,metadata:{product_type:'addon',authors:['AddonMerger']}}));
   addLog('ok','RP',`manifest → UUID ${rpUUID.slice(0,8)}...`);
   addLog('ok','RP',`Done! files:${stats.files} merged:${stats.merged} renamed:${stats.conflicts}`);
