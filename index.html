@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MC Addon Merger - Java Connected</title>
+<title>MC Addon Merger</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
@@ -14,113 +15,256 @@
   --font:'Press Start 2P',monospace;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:10px;min-height:100vh;padding:20px;}
-.container{max-width:800px;margin:0 auto;background:var(--panel);border:4px solid #444;padding:20px;border-radius:10px;}
-h1{color:var(--gold);text-align:center;margin-bottom:20px;font-size:16px;}
-.form-group{margin-bottom:15px;}
-label{display:block;margin-bottom:5px;color:var(--diamond);}
-input[type="text"], input[type="file"]{width:100%;padding:10px;background:#111;border:2px solid #555;color:#fff;font-family:var(--font);font-size:10px;}
-button{width:100%;padding:15px;background:var(--emerald);border:none;color:#000;font-family:var(--font);font-size:12px;cursor:pointer;font-weight:bold;margin-top:10px;}
-button:disabled{background:#555;cursor:not-allowed;}
-#logBox{background:#000;border:2px solid #333;padding:10px;height:15px;overflow-y:auto;margin-top:15px;display:none;}
-#logBox.on{display:block;}
-.ll{margin-bottom:5px;line-height:1.4;}
+html{scrollbar-color:#444 #111;scrollbar-width:thin}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:10px;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;
+  background:
+    radial-gradient(circle at 20% 30%,rgba(93,236,245,0.03) 0%,transparent 40%),
+    radial-gradient(circle at 80% 70%,rgba(23,221,98,0.02) 0%,transparent 45%);
+  z-index:-1;pointer-events:none}
+.wrap{max-width:900px;margin:0 auto;padding:20px 10px}
+header{text-align:center;margin-bottom:25px;position:relative;padding-bottom:15px;border-bottom:4px dashed #333}
+h1{font-size:22px;color:var(--gold);text-shadow:3px 3px 0 #000,-3px -3px 0 #000,3px -3px 0 #000,-3px 3px 0 #000,4px 4px 0 rgba(0,0,0,0.5);letter-spacing:1px;margin-bottom:8px}
+.subtitle{font-size:8px;color:var(--dim);letter-spacing:0.5px}
+.grid{display:grid;grid-template-columns:1fr;gap:20px}
+@media(min-width:768px){.grid{grid-template-columns:1fr 1fr}}
+.box{background:var(--panel);border:4px solid #333;box-shadow:inset -4px -4px 0 #222,inset 4px 4px 0 #444,6px 6px 0 #000;padding:15px;position:relative}
+.box-title{position:absolute;top:-10px;left:15px;background:#111;padding:2px 8px;font-size:8px;color:var(--gold);border:2px solid #555}
+.zone{border:4px dashed #444;background:#141414;padding:30px 10px;text-align:center;cursor:pointer;transition:all 0.15s ease;margin-bottom:15px;position:relative}
+.zone:hover,.zone.drag{border-color:var(--diamond);background:#181c20}
+.zone p{font-size:8px;color:var(--dim);line-height:1.6}
+.zone p.big{font-size:10px;color:#fff;margin-bottom:8px}
+.zone input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.list-wrap{max-height:280px;overflow-y:auto;border:2px solid #222;background:#111;padding:5px}
+.empty-msg{font-size:8px;color:#444;text-align:center;padding:20px;font-style:italic}
+.p-item{display:flex;align-items:center;justify-content:between;background:#1a1a1a;border:2px solid #333;padding:8px;margin-bottom:6px;gap:8px}
+.p-icon{width:24px;height:24px;background:#333;border:2px solid #555;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:8px;color:var(--dim);overflow:hidden}
+.p-icon img{width:100%;height:100%;object-fit:cover;image-rendering:pixelated}
+.p-info{flex-grow:1;min-width:0}
+.p-name{font-size:8px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px}
+.p-meta{display:flex;gap:8px;font-size:6px}
+.p-type{padding:1px 4px;border-radius:2px;font-weight:bold;color:#000}
+.p-type.bp{background:var(--purple)}
+.p-type.rp{background:var(--diamond)}
+.p-size{color:var(--dim);align-self:center}
+.p-del{background:none;border:none;color:var(--red);cursor:pointer;font-family:var(--font);font-size:10px;padding:4px;line-height:1;margin-left:auto}
+.p-del:hover{color:#fff;text-shadow:0 0 4px var(--red)}
+.form-g{margin-bottom:12px}
+.form-g label{display:block;font-size:8px;color:var(--diamond);margin-bottom:6px}
+.form-g input[type="text"]{width:100%;background:#111;border:3px solid #444;color:#fff;font-family:var(--font);font-size:9px;padding:8px;box-shadow:inset 2px 2px 0 #000}
+.form-g input[type="text"]:focus{border-color:var(--gold);outline:none}
+.btn{width:100%;background:var(--emerald);color:#000;border:4px solid #118037;box-shadow:inset -3px -3px 0 #0f933f,inset 3px 3px 0 #5eff93,4px 4px 0 #000;font-family:var(--font);font-size:11px;font-weight:bold;padding:12px;cursor:pointer;text-shadow:1px 1px 0 rgba(255,255,255,0.2);margin-top:5px;image-rendering:pixelated}
+.btn:active{transform:translate(2px,2px);box-shadow:inset -2px -2px 0 #0f933f,inset 2px 2px 0 #5eff93,2px 2px 0 #000}
+.btn:disabled{background:#444;border-color:#222;box-shadow:none;color:#777;cursor:not-allowed}
+#pw{display:none;margin-top:15px;background:#151515;border:2px solid #333;padding:10px}
+#pw.on{display:block}
+.p-bar-w{height:12px;background:#000;border:2px solid #444;position:relative;margin-bottom:6px}
+.p-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--orange),var(--gold));transition:width 0.1s linear}
+.p-txt{font-size:7px;color:#fff;display:flex;justify-content:between}
+#logBox{background:#050505;border:2px solid #222;padding:8px;height:120px;overflow-y:auto;margin-top:10px;display:none}
+#logBox.on{display:block}
+.ll{font-size:7px;line-height:1.4;margin-bottom:4px;white-space:pre-wrap;word-break:break-all}
 .ll.info{color:var(--diamond)}
 .ll.ok{color:var(--emerald)}
 .ll.err{color:var(--red)}
-#pw{display:none;margin-top:10px;color:var(--orange);}
-#pw.on{display:block;}
+.ll.warn{color:var(--orange)}
+.toast{position:fixed;bottom:-60px;left:50%;transform:translateX(-50%);background:#222;border:3px solid #fff;padding:10px 20px;font-size:8px;z-index:9999;box-shadow:4px 4px 0 #000;transition:bottom 0.3s cubic-bezier(0.18,0.89,0.32,1.28)}
+.toast.on{bottom:20px}
+.toast.ok{border-color:var(--emerald);color:var(--emerald)}
+.toast.er{border-color:var(--red);color:var(--red)}
 </style>
 </head>
 <body>
 
-<div class="container">
-  <h1>MINECRAFT ADDON MERGER (JAVA SERVER CONTEXT)</h1>
-  
-  <div class="form-group">
-    <label>Select Addon Files (.mcaddon or .zip):</label>
-    <input type="file" id="fi" multiple accept=".zip,.mcaddon">
-  </div>
+<div class="wrap">
+  <header>
+    <h1>MC ADDON MERGER</h1>
+    <div class="subtitle">JAVA BACKEND & DATABASE AUTOMATION POWERED</div>
+  </header>
 
-  <div class="form-group">
-    <label>Unified Behavior Pack Name:</label>
-    <input type="text" id="bpName" value="Unified_BP">
-  </div>
+  <div class="grid">
+    <div class="box">
+      <div class="box-title">INPUT PACKS</div>
+      <div class="zone" id="dropZone">
+        <p class="big">DRAG & DROP FILES HERE</p>
+        <p>OR CLICK TO BROWSE</p>
+        <p style="margin-top:6px;color:#555">SUPPORTED: .mcaddon, .zip</p>
+        <input type="file" id="fi" multiple accept=".zip,.mcaddon">
+      </div>
+      <div class="list-wrap" id="listWrap">
+        <div class="empty-msg">No packs loaded yet.</div>
+      </div>
+    </div>
 
-  <div class="form-group">
-    <label>Unified Resource Pack Name:</label>
-    <input type="text" id="rpName" value="Unified_RP">
-  </div>
+    <div class="box">
+      <div class="box-title">MERGE SETTINGS</div>
+      <div class="form-g">
+        <label>UNIFIED BEHAVIOR PACK NAME</label>
+        <input type="text" id="bpName" value="Unified_BP">
+      </div>
+      <div class="form-g">
+        <label>UNIFIED RESOURCE PACK NAME</label>
+        <input type="text" id="rpName" value="Unified_RP">
+      </div>
+      <div class="form-g">
+        <label>OUTPUT FILE NAME (.mcaddon)</label>
+        <input type="text" id="outName" value="Merged_Addon_Pack">
+      </div>
+      
+      <button class="btn" id="btnMerge" onclick="startMerge()">⚡ START JAVA MERGE PROCESS</button>
 
-  <div class="form-group">
-    <label>Output File Name:</label>
-    <input type="text" id="outName" value="Merged_Addon">
-  </div>
+      <div id="pw">
+        <div class="p-bar-w"><div class="p-bar" id="pBar"></div></div>
+        <div class="p-txt"><span id="pStat">Processing...</span><span id="pPct">0%</span></div>
+      </div>
 
-  <button id="btnMerge" onclick="startMerge()">MERGE ON JAVA BACKEND</button>
-  
-  <div id="pw">Processing... Please wait...</div>
-  <div id="logBox"></div>
+      <div id="logBox"></div>
+    </div>
+  </div>
 </div>
 
+<div class="toast" id="toast"></div>
+
 <script>
+let loadedAddons = [];
+const fi = document.getElementById('fi');
+const dz = document.getElementById('dropZone');
+
+fi.addEventListener('change', e => { handleFiles(e.target.files); fi.value=''; });
+['dragenter','dragover'].forEach(n => dz.addEventListener(n, e=>{e.preventDefault();dz.classList.add('drag')}, false));
+['dragleave','drop'].forEach(n => dz.addEventListener(n, e=>{e.preventDefault();dz.classList.remove('drag')}, false));
+dz.addEventListener('drop', e => { handleFiles(e.dataTransfer.files); });
+
+function handleFiles(files) {
+  for(let f of files) {
+    if(!f.name.endsWith('.zip') && !f.name.endsWith('.mcaddon')) {
+      showToast('Invalid file format! Only .zip/.mcaddon','er');
+      continue;
+    }
+    // မူရင်း File Object တစ်ခုလုံးကို သိမ်းထားခြင်း (Java Backend သို့ Stream ပို့ရန်အတွက်)
+    loadedAddons.push({ id: uuid4(), name: f.name, size: f.size, fileObject: f });
+  }
+  renderList();
+}
+
+function renderList() {
+  const w = document.getElementById('listWrap');
+  if(!loadedAddons.length) { w.innerHTML = '<div class="empty-msg">No packs loaded yet.</div>'; return; }
+  w.innerHTML = '';
+  loadedAddons.forEach(a => {
+    const isBp = a.name.toLowerCase().includes('bp') || a.name.toLowerCase().includes('behavior');
+    const typeLabel = isBp ? 'BP' : 'RP';
+    const typeClass = isBp ? 'bp' : 'rp';
+    const mb = (a.size / (1024*1024)).toFixed(2);
+    
+    const d = document.createElement('div');
+    d.className = 'p-item';
+    d.innerHTML = `
+      <div class="p-icon">📦</div>
+      <div class="p-info">
+        <div class="p-name" title="${escHtml(a.name)}">${escHtml(a.name)}</div>
+        <div class="p-meta">
+          <span class="p-type ${typeClass}">${typeLabel}</span>
+          <span class="p-size">${mb} MB</span>
+        </div>
+      </div>
+      <button class="p-del" onclick="removeAddon('${a.id}')">✕</button>
+    `;
+    w.appendChild(d);
+  });
+}
+
+function removeAddon(id) {
+  loadedAddons = loadedAddons.filter(a => a.id !== id);
+  renderList();
+}
+
 function v(id, def){ const e=document.getElementById(id); return (e && e.value.trim()) ? e.value.trim() : def; }
 
+// ═══════════════════════════════════════════════════════════════
+// JAVA SPRING BOOT BACKEND INTEGRATION (ဖိုင်ကြီးကြီးများ + API + DB)
+// ═══════════════════════════════════════════════════════════════
 async function startMerge() {
-  const filesInput = document.getElementById('fi').files;
-  if (!filesInput.length) { alert('Please select files first!'); return; }
+  if (!loadedAddons.length) { showToast('No packs loaded to merge!', 'er'); return; }
   
   document.getElementById('btnMerge').disabled = true;
   document.getElementById('logBox').innerHTML = '';
   document.getElementById('logBox').classList.add('on');
   document.getElementById('pw').classList.add('on');
 
-  addLog('info', 'SYS', 'Connecting to secure Java Backend...');
-  addLog('info', 'SYS', 'Uploading large files chunks into the Database & Server stream...');
+  setP(10, 'Initializing Java Server Connection...'); await tick();
+  addLog('info', 'SYS', 'Preparing multi-part binary chunks for big file upload...');
 
+  // ၁။ ဖိုင်ကြီးများကို Server ပေါ်တွင် Stream လုပ်ရန် FormData တည်ဆောက်ခြင်း
   const formData = new FormData();
-  for (let i = 0; i < filesInput.length; i++) {
-      formData.append('files', filesInput[i]);
-  }
+  loadedAddons.forEach(addon => {
+      formData.append('files', addon.fileObject); // File Payload အစစ်ကို ထည့်သွင်းခြင်း
+  });
+  
   formData.append('bpName', v('bpName', 'Unified_BP'));
   formData.append('rpName', v('rpName', 'Unified_RP'));
 
+  setP(35, 'Uploading chunks & executing Java Merge + DB Logging...'); await tick();
+  addLog('info', 'JAVA', 'Server is writing entries to Database, allocating memory buffers...');
+
   try {
-    // Java Spring Boot API Context Url
+    // ၂။ Spring Boot Backend API သို့ ချိတ်ဆက်ခြင်း (လုံခြုံရေး၊ API စနစ်၊ Automation)
     const response = await fetch('http://localhost:8080/api/addons/merge', {
         method: 'POST',
         body: formData
     });
 
-    if (!response.ok) throw new Error('Backend failed to process or authorization denied.');
+    if (!response.ok) throw new Error('Java backend encountered an execution error or database lockdown.');
 
-    addLog('info', 'SYS', 'Server merging and DB writing completed. Fetching final package...');
-    
+    setP(75, 'Processing completed on Server. Streaming back output file...'); await tick();
+    addLog('ok', 'DB', 'Transaction logged into SQL database successfully.');
+
+    // ၃။ Java Controller မှ စိတ်ချလက်ချ ပေါင်းစည်းပြီး ပြန်ပေးလိုက်သော binary stream ကို လက်ခံခြင်း
     const blob = await response.blob();
-    const outName = v('outName', 'Merged_Addon');
+    const outName = v('outName', 'Merged_Addon_Pack');
     
+    setP(90, 'Generating final .mcaddon package...'); await tick();
+    
+    // FileSaver.js ဖြင့် Local စက်ထဲသို့ သိမ်းဆည်းခြင်း
     saveAs(blob, `${outName}.mcaddon`);
     
-    const mb = (blob.size / 1024 / 1024).toFixed(2);
-    addLog('ok', '✓', `Success! Saved to DB & Merged. Size: ${mb} MB`);
-    document.getElementById('pw').innerText = '✓ Merge Completed!';
+    const finalMb = (blob.size / (1024 * 1024)).toFixed(2);
+    addLog('ok', 'SUCCESS', `Java Pipeline completed. Final Output size: ${finalMb} MB`);
+    setP(100, `Done! (${finalMb} MB)`);
+    showToast('Addon Merged & DB Updated!', 'ok');
 
   } catch (error) {
-    addLog('err', 'ERR', `Failed: ${error.message}`);
-    document.getElementById('pw').innerText = '✕ Processing Error';
+    addLog('err', 'CRITICAL', `Pipeline Error: ${error.message}`);
+    setP(0, 'Process Terminated');
+    showToast('Java Backend Error!', 'er');
   } finally {
     document.getElementById('btnMerge').disabled = false;
   }
 }
 
-function addLog(type, tag, msg){
-  const b=document.getElementById('logBox');
-  const d=document.createElement('div');
-  d.className='ll '+type;
-  d.innerText=`[${tag}] ${msg}`;
-  b.appendChild(d);
-  b.scrollTop=b.scrollHeight;
+function setP(pct, txt) {
+  document.getElementById('pBar').style.width = pct + '%';
+  document.getElementById('pPct').innerText = pct + '%';
+  document.getElementById('pStat').innerText = txt;
 }
+
+function addLog(type, tag, msg) {
+  const b = document.getElementById('logBox');
+  const d = document.createElement('div'); d.className = 'll ' + type;
+  d.innerText = `[${tag}] ${msg}`;
+  b.appendChild(d);
+  b.scrollTop = b.scrollHeight;
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.innerText = msg; t.className = 'toast on ' + (type || '');
+  setTimeout(() => t.classList.remove('on'), 3000);
+}
+
+function uuid4(){ return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { const r = Math.random()*16|0, v = c==='x'?r:(r&0x3|0x8); return v.toString(16); }); }
+function escHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function tick(){ return new Promise(r => setTimeout(r, 200)); }
 </script>
 </body>
 </html>
